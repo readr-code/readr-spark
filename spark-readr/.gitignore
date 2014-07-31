@@ -1,0 +1,5 @@
+/src/main/scala/App.scala
+.cache
+/target
+/project/target
+/project/project
