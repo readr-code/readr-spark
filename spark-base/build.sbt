@@ -11,17 +11,17 @@ libraryDependencies ++= Seq(
  ) 
 
 resolvers ++= Seq(
-  "Readr snapshots" at "s3://snapshots.mvn-repo.readr.com",
-  "Readr releases" at "s3://releases.mvn-repo.readr.com"
+  "Readr snapshots" at "http://snapshots.mvn-repo.readr.com",
+  "Readr releases" at "http://releases.mvn-repo.readr.com"
 )
 
 publishMavenStyle := false
 
 publishTo := {
   if (isSnapshot.value)
-    Some("snapshots" at "s3://snapshots.mvn-repo.readr.com")
+    Some("snapshots" at "http://snapshots.mvn-repo.readr.com")
   else
-    Some("releases" at "s3://releases.mvn-repo.readr.com")
+    Some("releases" at "http://releases.mvn-repo.readr.com")
 }
 
 EclipseKeys.withSource := true
