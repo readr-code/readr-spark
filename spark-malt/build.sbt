@@ -7,8 +7,7 @@ version := "1.0-SNAPSHOT"
 libraryDependencies ++= Seq( 
   "org.apache.spark" %% "spark-core" % "1.0.2" % "provided",
   "org.maltparser" % "maltparser"  % "1.8",  
-//  "org.maltparser" % "maltparser"  % "1.7.2",  
-  "com.readr"  % "spark-base" % "1.0-SNAPSHOT",
+  "com.readr"  %% "spark-base" % "1.0-SNAPSHOT",
   "com.readr"  % "model" % "1.0-SNAPSHOT"
 )
 
@@ -23,9 +22,9 @@ publishMavenStyle := false
 
 publishTo := {
   if (isSnapshot.value)
-    Some("snapshots" at "http://snapshots.mvn-repo.readr.com")
+    Some("snapshots" at "s3://snapshots.mvn-repo.readr.com")
   else
-    Some("releases" at "http://releases.mvn-repo.readr.com")
+    Some("releases" at "s3://releases.mvn-repo.readr.com")
 }
 
 EclipseKeys.withSource := true

@@ -14,26 +14,20 @@ version := "1.0-SNAPSHOT"
 libraryDependencies ++= Seq( 
   "org.apache.spark" %% "spark-core" % "1.0.2" % "provided",
   "com.twitter"  %% "chill" % "0.3.6",
-  "com.readr"  % "spark-base" % "1.0-SNAPSHOT",
+  "com.readr"  %% "spark-base" % "1.0-SNAPSHOT",
   "com.readr"  % "model" % "1.0-SNAPSHOT",
 //  "com.readr"  % "client" % "1.0-SNAPSHOT",
-  "com.readr.spark" % "spark-cj" % "1.0-SNAPSHOT",
-  "com.readr.spark" % "spark-index" % "1.0-SNAPSHOT",
-  "com.readr.spark" % "spark-malt" % "1.0-SNAPSHOT",
-  "com.readr.spark" % "spark-allenai" % "1.0-SNAPSHOT",
-  "com.readr.spark" % "spark-stanford34" % "1.0-SNAPSHOT",
-  "com.readr.spark" % "spark-other" % "1.0-SNAPSHOT",
-  "com.readr.spark" % "spark-frame" % "1.0-SNAPSHOT"  
+  "com.readr.spark" %% "spark-cj" % "1.0-SNAPSHOT",
+  "com.readr.spark" %% "spark-index" % "1.0-SNAPSHOT",
+  "com.readr.spark" %% "spark-malt" % "1.0-SNAPSHOT",
+  "com.readr.spark" %% "spark-allenai" % "1.0-SNAPSHOT",
+  "com.readr.spark" %% "spark-stanford34" % "1.0-SNAPSHOT",
+  "com.readr.spark" %% "spark-other" % "1.0-SNAPSHOT",
+  "com.readr.spark" %% "spark-frame" % "1.0-SNAPSHOT"  
 //  "com.readr" % "import-allenai-barrons-spark" % "1.0-SNAPSHOT"
 //  "org.scala-lang" % "scala-library" % "2.10.4" % "provided",
 //  "com.typesafe.play" % "play_2.10" % "2.3.0-RC2" % "provided"
 )
-
-//unmanagedJars in Compile += file("../spark-stanford34/lib/stanford-corenlp-3.4.jar")
-
-//unmanagedJars in Compile += file("../spark-stanford34/lib/stanford-corenlp-3.4-models.jar")
-
-//unmanagedJars in Compile += file("../spark-stanford34/lib/stanford-srparser-2014-06-16-models.jar")
 
 resolvers += "Akka Repository" at "http://repo.akka.io/releases/"
 
@@ -46,9 +40,9 @@ publishMavenStyle := false
 
 publishTo := {
   if (isSnapshot.value)
-    Some("snapshots" at "http://snapshots.mvn-repo.readr.com")
+    Some("snapshots" at "s3://snapshots.mvn-repo.readr.com")
   else
-    Some("releases" at "http://releases.mvn-repo.readr.com")
+    Some("releases" at "s3://releases.mvn-repo.readr.com")
 }
 
 resolvers ++= Seq(
@@ -60,4 +54,4 @@ resolvers ++= Seq(
 
 EclipseKeys.withSource := true
 
-net.virtualvoid.sbt.graph.Plugin.graphSettings
+//net.virtualvoid.sbt.graph.Plugin.graphSettings

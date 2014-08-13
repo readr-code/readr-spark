@@ -7,7 +7,7 @@ version := "1.0-SNAPSHOT"
 libraryDependencies ++= Seq( 
   "org.apache.spark" %% "spark-core" % "1.0.2" % "provided",
   "org.apache.spark" %% "spark-mllib" % "1.0.2",
-  "com.readr"  % "spark-base" % "1.0-SNAPSHOT",
+  "com.readr"  %% "spark-base" % "1.0-SNAPSHOT",
   "com.readr"  % "model" % "1.0-SNAPSHOT"
 )
 
