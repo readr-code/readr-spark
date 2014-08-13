@@ -1,15 +1,11 @@
 organization := "com.readr.spark"
 
-name := "spark-malt"
+name := "spark-netlib"
 
 version := "1.0-SNAPSHOT"
 
 libraryDependencies ++= Seq( 
-  "org.apache.spark" %% "spark-core" % "1.0.2" % "provided",
-  "org.maltparser" % "maltparser"  % "1.8",  
-//  "org.maltparser" % "maltparser"  % "1.7.2",  
-  "com.readr"  % "spark-base" % "1.0-SNAPSHOT",
-  "com.readr"  % "model" % "1.0-SNAPSHOT"
+  "com.github.fommil.netlib" % "all" % "1.1.2"
 )
 
 resolvers += "Akka Repository" at "http://repo.akka.io/releases/"

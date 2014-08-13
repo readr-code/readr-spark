@@ -35,7 +35,7 @@ object FrameIndexer {
     
     
     // frame: frameID, name, description, examples, typ
-    // frameArg: frameArgID, frameID, position, name, description, required, valueFrameID, typeFrameID
+    // frameArg: frameID, position, name, description, required, valueFrameID, typeFrameID
          
     // frameRelation:frameRelationID, parentFrameID, childFrameID, frameRelationType
     // frameArgRelation:frameRelationID,parentFrameArgID,childFrameArgID
@@ -56,10 +56,9 @@ object FrameIndexer {
         
         val frame = Tuple5(frameID, f.name, f.description, f.examples, f.typ.id)
 
-        val frameArg = f.args.map(x => {
-          frameArgID += 1
-          Tuple6(frameArgID, frameID, x.pos, x.name, x.description, if (x.required) 1 else 0)
-        })
+        val frameArg = f.args.map(x =>
+          Tuple5(frameID, x.argNum, x.name, x.description, if (x.required) 1 else 0)
+        )
         
         val frameValence = f.valences.map(x => Tuple3(frameID, x.inheritedFrameID, x.text))
       
@@ -69,8 +68,8 @@ object FrameIndexer {
           val fmf = Tuple4(instanceID, frameID, if (x.truth) 1 else 0, x.priority)
         
           val fmfa = for (i <- 0 until x.args.size) yield {
-            val frameArgID = frameArg(i)._1
-            Tuple4(instanceID, frameArgID, x.args(i).documentID, x.args(i).pos)
+            val argNum = frameArg(i)._2
+            Tuple4(instanceID, argNum, x.args(i).documentID, x.args(i).pos)
           }
           (fmf, fmfa)
         })

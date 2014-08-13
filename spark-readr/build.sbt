@@ -4,21 +4,15 @@ name := "spark-readr"
 
 version := "1.0-SNAPSHOT"
 
-// disable using the Scala version in output paths and artifacts
-crossPaths := false
-
-scalaVersion := "2.10.4"
-
-libraryDependencies += "org.apache.spark" %% "spark-core" % "1.0.0" % "provided"
-
 // NOTE: For hadoop 2.4.0 must also include different version of jets3t
 // "org.apache.hadoop" % "hadoop-client" % "2.4.0",
 // "net.java.dev.jets3t"      % "jets3t"           % "0.9.0",
+//  "org.apache.hadoop" % "hadoop-client" % "1.0.4",
+//  "net.java.dev.jets3t"      % "jets3t"           % "0.7.1",
+// but default version on spark ec2 is 1.0.4
 
 libraryDependencies ++= Seq( 
-  "org.apache.spark" %% "spark-core" % "1.0.0" % "provided",
-  "org.apache.hadoop" % "hadoop-client" % "1.0.4",
-  "net.java.dev.jets3t"      % "jets3t"           % "0.7.1",
+  "org.apache.spark" %% "spark-core" % "1.0.2" % "provided",
   "com.twitter"  %% "chill" % "0.3.6",
   "com.readr"  % "spark-base" % "1.0-SNAPSHOT",
   "com.readr"  % "model" % "1.0-SNAPSHOT",
@@ -63,8 +57,6 @@ resolvers ++= Seq(
   "IESL Releases" at "http://dev-iesl.cs.umass.edu/nexus/content/groups/public",
   Resolver.sonatypeRepo("snapshots")
 )
-
-// but default version on spark ec2 is 1.0.4
 
 EclipseKeys.withSource := true
 

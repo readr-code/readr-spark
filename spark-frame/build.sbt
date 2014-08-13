@@ -4,12 +4,8 @@ name := "spark-frame"
 
 version := "1.0-SNAPSHOT"
 
-// disable using the Scala version in output paths and artifacts
-crossPaths := false
-
 libraryDependencies ++= Seq( 
-  "org.apache.spark" %% "spark-core" % "1.0.0" % "provided",
-  "net.java.dev.jets3t"      % "jets3t"           % "0.7.1",
+  "org.apache.spark" %% "spark-core" % "1.0.2" % "provided",
   "com.readr"  % "spark-base" % "1.0-SNAPSHOT",
   "com.readr"  % "model" % "1.0-SNAPSHOT"
 )
@@ -31,5 +27,3 @@ publishTo := {
 }
 
 EclipseKeys.withSource := true
-
-

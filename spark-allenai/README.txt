@@ -1,5 +1,6 @@
 
-SPARK_MEM=4G bin/spark-shell --master local[2] --jars "/Users/raphael/readr/spark/spark-readr/target/spark-readr-assembly-1.0-SNAPSHOT.jar" --driver-java-options "-Dspark.serializer=org.apache.spark.serializer.KryoSerializer -Dspark.kryo.registrator=com.readr.spark.MyRegistrator -Dspark.kryoserializer.buffer.mb=16"
+SPARK_MEM=4G bin/spark-shell --master local[2] --jars "/Users/raphael/readr-spark/spark-readr/target/scala-2.10/spark-readr-assembly-1.0-SNAPSHOT.jar" --driver-java-options "-Dspark.serializer=org.apache.spark.serializer.KryoSerializer -Dspark.kryo.registrator=com.readr.spark.MyRegistrator -Dspark.kryoserializer.buffer.mb=16"
+SPARK_MEM=4G bin/spark-shell --master local[2] --jars "/Users/raphael/readr-spark/spark-readr/target/scala-2.10/spark-readr-assembly-1.0-SNAPSHOT.jar,/Users/raphael/readr-spark/spark-distsim/target/scala-2.10/spark-distsim-assembly-1.0-SNAPSHOT.jar" --driver-java-options "-Dspark.serializer=org.apache.spark.serializer.KryoSerializer -Dspark.kryo.registrator=com.readr.spark.MyRegistrator -Dspark.kryoserializer.buffer.mb=16"
 
 
 val sourceDir = "/Users/raphael/data/source/barrons-4th-grade"
@@ -42,6 +43,9 @@ LemmaIndexer.run(outDir, n)
 MentionIndexer.run(outDir, n)
 //NERIndexer.run(outDir, n)
 //LuceneIndexer.run(outDir, n)
+
+import com.readr.spark.distsim._
+LSAOnSentences.run(outDir, c)
 
 
 import com.readr.model.annotation.FrameMatchFeature

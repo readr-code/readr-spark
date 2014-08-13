@@ -11,7 +11,6 @@ import com.readr.model._
 import com.readr.model.annotation._
 import com.readr.model.frame._
 
-
 import com.readr.spark.util.Annotator
 
 import scala.collection.mutable.ArrayBuffer
@@ -19,7 +18,6 @@ import java.util.Properties
 import java.util.Vector
 
 import com.readr.spark.util.Utils._
-
 
 object MentionFrameCreator {
   
@@ -73,7 +71,7 @@ object MentionFrameCreator {
           examples = "",
           typ = FrameType.Verb,
           properties = Nil,
-          args = Seq(FrameArg(-1, frameID, 0, "a", "", true)),
+          args = Seq(FrameArg(frameID, 0, "a", "", true)),
           valences = Seq(FrameValence(frameID, -1, "mention(a, \"" + span + "\")")))
       
       val s = ArrayBuffer[FrameMatchFeature]()
@@ -81,7 +79,7 @@ object MentionFrameCreator {
         val documentID = it._1.toInt
         val pos = it._2
         
-        s += FrameMatchFeature(-1, frameID, true, 0, Seq(FrameMatchFeatureArg(-1, documentID, pos)))
+        s += FrameMatchFeature(-1, frameID, true, 0, Seq(FrameMatchFeatureArg(0, documentID, pos)))
       }
       (frameID.toLong,f,s.toSeq)
     }
