@@ -1,8 +1,8 @@
 organization := "com.readr.spark"
 
-name := "spark-readr"
+name := "main"
 
-version := "1.0-SNAPSHOT"
+version := "1.1-SNAPSHOT"
 
 // NOTE: For hadoop 2.4.0 must also include different version of jets3t
 // "org.apache.hadoop" % "hadoop-client" % "2.4.0",
@@ -14,20 +14,19 @@ version := "1.0-SNAPSHOT"
 libraryDependencies ++= Seq( 
   "org.apache.spark" %% "spark-core" % "1.0.2" % "provided",
   "com.twitter"  %% "chill" % "0.3.6",
-  "com.readr"  %% "spark-base" % "1.0-SNAPSHOT",
-  "com.readr"  % "model" % "1.0-SNAPSHOT",
-//  "com.readr"  % "client" % "1.0-SNAPSHOT",
-  "com.readr.spark" %% "spark-cj" % "1.0-SNAPSHOT",
-  "com.readr.spark" %% "spark-index" % "1.0-SNAPSHOT",
-  "com.readr.spark" %% "spark-malt" % "1.0-SNAPSHOT",
-  "com.readr.spark" %% "spark-allenai" % "1.0-SNAPSHOT",
-  "com.readr.spark" %% "spark-stanford34" % "1.0-SNAPSHOT",
-  "com.readr.spark" %% "spark-other" % "1.0-SNAPSHOT",
-  "com.readr.spark" %% "spark-frame" % "1.0-SNAPSHOT"  
-//  "com.readr" % "import-allenai-barrons-spark" % "1.0-SNAPSHOT"
-//  "org.scala-lang" % "scala-library" % "2.10.4" % "provided",
-//  "com.typesafe.play" % "play_2.10" % "2.3.0-RC2" % "provided"
+  "com.readr.spark"  %% "base" % "1.1-SNAPSHOT",
+  "com.readr"  %% "model" % "1.1-SNAPSHOT",
+//  "com.readr"  %% "client" % "1.1-SNAPSHOT",
+  "com.readr.spark" %% "cj" % "1.-SNAPSHOT",
+  "com.readr.spark" %% "index" % "1.1-SNAPSHOT",
+  "com.readr.spark" %% "malt" % "1.1-SNAPSHOT",
+  "com.readr.spark" %% "allenai" % "1.1-SNAPSHOT",
+  "com.readr.spark" %% "stanford34" % "1.1-SNAPSHOT",
+  "com.readr.spark" %% "other" % "1.1-SNAPSHOT",
+  "com.readr.spark" %% "frame" % "1.1-SNAPSHOT"  
 )
+
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 
 resolvers += "Akka Repository" at "http://repo.akka.io/releases/"
 
@@ -53,5 +52,3 @@ resolvers ++= Seq(
 )
 
 EclipseKeys.withSource := true
-
-//net.virtualvoid.sbt.graph.Plugin.graphSettings

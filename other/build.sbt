@@ -1,23 +1,20 @@
 organization := "com.readr.spark"
 
-name := "spark-distsim"
+name := "other"
 
-version := "1.0-SNAPSHOT"
+version := "1.1-SNAPSHOT"
 
 libraryDependencies ++= Seq( 
   "org.apache.spark" %% "spark-core" % "1.0.2" % "provided",
-  "org.apache.spark" %% "spark-mllib" % "1.0.2",
-  "com.readr"  %% "spark-base" % "1.0-SNAPSHOT",
-  "com.readr"  % "model" % "1.0-SNAPSHOT"
+  "com.readr.spark"  %% "base" % "1.1-SNAPSHOT",
+  "com.readr" %% "model" % "1.1-SNAPSHOT"
 )
-
-unmanagedJars in Compile += file("lib/prtree.jar")
 
 resolvers += "Akka Repository" at "http://repo.akka.io/releases/"
 
 resolvers ++= Seq(
-  "Readr snapshots" at "s3://snapshots.mvn-repo.readr.com",
-  "Readr releases" at "s3://releases.mvn-repo.readr.com"
+  "Readr snapshots" at "http://snapshots.mvn-repo.readr.com",
+  "Readr releases" at "http://releases.mvn-repo.readr.com"
 )
 
 publishMavenStyle := false

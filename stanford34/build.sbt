@@ -1,15 +1,20 @@
 organization := "com.readr.spark"
 
-name := "spark-malt"
+name := "stanford34"
 
-version := "1.0-SNAPSHOT"
+version := "1.1-SNAPSHOT"
 
 libraryDependencies ++= Seq( 
   "org.apache.spark" %% "spark-core" % "1.0.2" % "provided",
-  "org.maltparser" % "maltparser"  % "1.8",  
-  "com.readr"  %% "spark-base" % "1.0-SNAPSHOT",
-  "com.readr"  % "model" % "1.0-SNAPSHOT"
+  "com.readr.spark"  %% "base" % "1.1-SNAPSHOT",
+  "com.readr" %% "model" % "1.1-SNAPSHOT",
+  "edu.stanford.nlp" % "stanford-corenlp" % "3.4" withSources(),
+  "edu.stanford.nlp" % "stanford-corenlp" % "3.4" classifier "models"
 )
+
+//unmanagedJars in Compile += file("lib/stanford-corenlp-3.4.jar")
+
+//unmanagedJars in Compile += file("lib/stanford-srparser-2014-06-16-models.jar")
 
 resolvers += "Akka Repository" at "http://repo.akka.io/releases/"
 

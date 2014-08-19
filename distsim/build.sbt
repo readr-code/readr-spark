@@ -1,14 +1,17 @@
 organization := "com.readr.spark"
 
-name := "spark-cj"
+name := "distsim"
 
 version := "1.0-SNAPSHOT"
 
 libraryDependencies ++= Seq( 
   "org.apache.spark" %% "spark-core" % "1.0.2" % "provided",
-  "com.readr"  %% "spark-base" % "1.0-SNAPSHOT",
-  "com.readr"  % "model" % "1.0-SNAPSHOT"
+  "org.apache.spark" %% "spark-mllib" % "1.0.2",
+  "com.readr.spark"  %% "base" % "1.0-SNAPSHOT",
+  "com.readr"  %% "model" % "1.0-SNAPSHOT"
 )
+
+unmanagedJars in Compile += file("lib/prtree.jar")
 
 resolvers += "Akka Repository" at "http://repo.akka.io/releases/"
 
@@ -21,9 +24,11 @@ publishMavenStyle := false
 
 publishTo := {
   if (isSnapshot.value)
-    Some("snapshots" at "http://snapshots.mvn-repo.readr.com")
+    Some("snapshots" at "s3://snapshots.mvn-repo.readr.com")
   else
-    Some("releases" at "http://releases.mvn-repo.readr.com")
+    Some("releases" at "s3://releases.mvn-repo.readr.com")
 }
 
 EclipseKeys.withSource := true
+
+
