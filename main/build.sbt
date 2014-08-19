@@ -20,7 +20,7 @@ libraryDependencies ++= Seq(
   "com.readr.spark" %% "cj" % "1.-SNAPSHOT",
   "com.readr.spark" %% "index" % "1.1-SNAPSHOT",
   "com.readr.spark" %% "malt" % "1.1-SNAPSHOT",
-  "com.readr.spark" %% "allenai" % "1.1-SNAPSHOT",
+//  "com.readr.spark" %% "allenai" % "1.1-SNAPSHOT",
   "com.readr.spark" %% "stanford34" % "1.1-SNAPSHOT",
   "com.readr.spark" %% "other" % "1.1-SNAPSHOT",
   "com.readr.spark" %% "frame" % "1.1-SNAPSHOT"  
