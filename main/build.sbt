@@ -51,4 +51,4 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 
-EclipseKeys.withSource := true
+//EclipseKeys.withSource := true

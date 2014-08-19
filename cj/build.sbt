@@ -26,4 +26,4 @@ publishTo := {
     Some("releases" at "http://releases.mvn-repo.readr.com")
 }
 
-EclipseKeys.withSource := true
+//EclipseKeys.withSource := true

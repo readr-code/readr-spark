@@ -32,6 +32,4 @@ publishTo := {
     Some("releases" at "s3://releases.mvn-repo.readr.com")
 }
 
-EclipseKeys.withSource := true
-
-
+//EclipseKeys.withSource := true
