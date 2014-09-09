@@ -23,7 +23,7 @@ resolvers ++= Seq(
   "Readr releases" at "http://releases.mvn-repo.readr.com"
 )
 
-publishMavenStyle := false
+publishMavenStyle := true 
 
 publishTo := {
   if (isSnapshot.value)

@@ -11,11 +11,11 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "org.allenai.nlpstack" %% "nlpstack-core" % "0.6",
-  "org.allenai.nlpstack" %% "nlpstack-parse" % "0.6",
-  "org.allenai.nlpstack" %% "nlpstack-postag" % "0.6",
-  "org.allenai.nlpstack" %% "nlpstack-segment" % "0.6",
-  "org.allenai.nlpstack" %% "nlpstack-lemmatize" % "0.6"
+  "org.allenai.nlpstack" %% "nlpstack-core" % "0.11",
+  "org.allenai.nlpstack" %% "nlpstack-parse" % "0.11",
+  "org.allenai.nlpstack" %% "nlpstack-postag" % "0.11",
+  "org.allenai.nlpstack" %% "nlpstack-segment" % "0.11",
+  "org.allenai.nlpstack" %% "nlpstack-lemmatize" % "0.11"
 )
 
 resolvers ++= Seq(
@@ -32,7 +32,7 @@ resolvers ++= Seq(
   "Readr releases" at "http://releases.mvn-repo.readr.com"
 )
 
-publishMavenStyle := false
+publishMavenStyle := true
 
 publishTo := {
   if (isSnapshot.value)

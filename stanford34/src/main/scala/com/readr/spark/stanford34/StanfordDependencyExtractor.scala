@@ -148,12 +148,18 @@ object StanfordDependencyExtractor {
   }
 }
 
-class StanfordDependencyExtractor(depTyp:String = StanfordDependencyExtractor.DEFAULT_DEP_TYPE)
+class StanfordDependencyExtractor
   extends Annotator(
       generates = Array(classOf[SentenceDependencyAnn]),
       requires = Array(classOf[TextAnn], classOf[SentenceOffsetAnn], 
           classOf[TokenOffsetAnn], classOf[TokensAnn], classOf[ParseAnn])) {
-  
+
+  var depTyp:String = StanfordDependencyExtractor.DEFAULT_DEP_TYPE
+
+  def setDepTyp(dt:String):StanfordDependencyExtractor = {
+    depTyp = dt; this
+  }
+
   //val depTyp:String = StanfordDependencyExtractor.DEFAULT_DEP_TYPE
   //val depTyp:String = "DepCCProcessed" //"DepUncollapsed"
 
