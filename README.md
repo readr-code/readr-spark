@@ -1,4 +1,4 @@
-[![Build Status](https://api.shippable.com/projects/53f2a2d7bc562cba01744b67/badge/master)](https://www.shippable.com/projects/53f2a2d7bc562cba01744b67)
+[![Build Status](https://api.shippable.com/projects/540e79223479c5ea8f9ea41c/badge?branchName=master)](https://app.shippable.com/projects/540e79223479c5ea8f9ea41c/builds/latest)
 
 # readr-spark
 
