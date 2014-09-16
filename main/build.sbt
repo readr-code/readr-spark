@@ -13,6 +13,7 @@ version := "1.1-SNAPSHOT"
 
 libraryDependencies ++= Seq( 
   "org.apache.spark" %% "spark-core" % "1.0.2" % "provided",
+//  "ooyala.cnd" % "job-server" % "0.3.1" % "provided",
   "com.twitter"  %% "chill" % "0.3.6",
   "com.readr.spark"  %% "base" % "1.1-SNAPSHOT",
   "com.readr"  %% "model" % "1.1-SNAPSHOT",
@@ -29,6 +30,8 @@ libraryDependencies ++= Seq(
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 
 resolvers += "Akka Repository" at "http://repo.akka.io/releases/"
+
+//resolvers += "Ooyala Bintray" at "http://dl.bintray.com/ooyala/maven"
 
 resolvers ++= Seq(
   "Readr snapshots" at "http://snapshots.mvn-repo.readr.com",

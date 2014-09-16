@@ -48,6 +48,9 @@ case class Schema(
 )
 
 
+// needed to give a reference to the containing jar to Hadoop's JobConf
+class rr {}
+
 object rr {
   val usage = """
     Usage: run
@@ -77,8 +80,10 @@ object rr {
     val annTyps = names.map(annTyp)
     val inputPaths:Array[String] = names.map(dir + "/" + _)
     val conf = localHadoopConf
-	val jobConf = new JobConf(conf, classOf[App])
-	jobConf.setInputFormat(classOf[CompositeInputFormat[LongWritable]])
+	//val jobConf = new JobConf(conf, classOf[App])
+    val jobConf = new JobConf(conf, classOf[rr])
+
+    jobConf.setInputFormat(classOf[CompositeInputFormat[LongWritable]])
 	jobConf.set("mapred.join.expr", CompositeInputFormat.compose("inner", 
 			classOf[SequenceFileInputFormat[LongWritable,BytesWritable]], inputPaths: _*))
 	val inputFormatClass:Class[_ <: InputFormat[LongWritable,TupleWritable]] = 
@@ -115,7 +120,7 @@ object rr {
     for (i <- 0 until names.length) {
       println("writing " + names(i))
       val outputPath = dir + "/" + names(i)
-	  val jobConf = new JobConf(conf, classOf[App])
+	  val jobConf = new JobConf(conf, classOf[rr])
 	  jobConf.setOutputFormat(classOf[SequenceFileOutputFormat[LongWritable,BytesWritable]])
 	  jobConf.setOutputKeyClass(classOf[LongWritable])
 	  jobConf.setOutputValueClass(classOf[BytesWritable])
