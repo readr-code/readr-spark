@@ -1,22 +1,38 @@
-[![Build Status](https://api.shippable.com/projects/53f2a2d7bc562cba01744b67/badge/master)](https://www.shippable.com/projects/53f2a2d7bc562cba01744b67)
-# Readr Spark API
+[![Build Status](https://api.shippable.com/projects/540e79223479c5ea8f9ea41c/badge?branchName=master)](https://app.shippable.com/projects/540e79223479c5ea8f9ea41c/builds/latest)
 
-This API makes it easy to run NLP pipelines on Apache Spark and create indices to be used with [Readr](http://readr.com).
+# readr-spark
 
-### Create readr-spark assembly
+Natural language processing library for Apache Spark. It offers the following features:
+
+* Wraps Stanford CoreNLP, CJ Parser, Allenai PolyParser, and much more
+* All pluggable through a common data model
+* Easy preview of outputs
+* Easy scaling through Spark
+* Annotator outputs stored as columns
+* Incremental processing of annotations
+* Efficient serialization through Kryo
+
+In addition, it offers easy connectivity with the [Readr](http://readr.com) cloud tool:
+
+* Indices needed by Readr cloud computed in spark, and bulk loaded into Readr cloud
+* Also includes computation for Readr interface features, such as text similarity
+* Can be used in combination with [readr-connect](http://github.com/readr-code/readr-connect)
+
+### Usage
+
+We assume you have sbt 0.13 or higher installed. Start by creating an assembly for readr-spark.
 
 `sbt assembly`
 
-### Convert own data into Readr format
+Next, you convert your data into a format readable by readr-spark. See this [example](http://github.com/readr-code/readr-connect).
 
-see CreateSource
+We can now start the spark-shell and run a series of processors on this data.
 
-### Run Annotators in spark shell
-
-SPARK_MEM=4G bin/spark-shell --master local[2] --jars "...../readr-spark/target/scala-2.10/spark-readr-assembly-1.0-SNAPSHOT.jar" --driver-java-options "-Dspark.serializer=org.apache.spark.serializer.KryoSerializer -Dspark.kryo.registrator=com.readr.spark.MyRegistrator -Dspark.kryoserializer.buffer.mb=16"
+`SPARK_MEM=4G bin/spark-shell --master local[2] --jars "...../readr-spark/target/scala-2.10/spark-readr-assembly-1.0-SNAPSHOT.jar" --driver-java-options "-Dspark.serializer=org.apache.spark.serializer.KryoSerializer -Dspark.kryo.registrator=com.readr.spark.MyRegistrator -Dspark.kryoserializer.buffer.mb=16"`
 
 Now you can run a few annotators
 
+```scala
 val sourceDir = "/Users/raphael/data/source/barrons-4th-grade"
 val outDir = "/Users/raphael/data/processed/barrons-4th-grade"
 
@@ -54,7 +70,7 @@ TokenIndexer.run(outDir, n)
 DependencyIndexer.run(outDir, n)
 POSIndexer.run(outDir, n)
 LemmaIndexer.run(outDir, n)
-
+```
 
 If you are interested in the annotations created, you can view them as follows:
 
