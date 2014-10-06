@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
   "com.readr.spark"  %% "base" % "1.1-SNAPSHOT",
   "com.readr"  %% "model" % "1.1-SNAPSHOT",
 //  "com.readr"  %% "client" % "1.1-SNAPSHOT",
-  "com.readr.spark" %% "cj" % "1.-SNAPSHOT",
+  "com.readr.spark" %% "cj" % "1.1-SNAPSHOT",
   "com.readr.spark" %% "index" % "1.1-SNAPSHOT",
   "com.readr.spark" %% "malt" % "1.1-SNAPSHOT",
 //  "com.readr.spark" %% "allenai" % "1.1-SNAPSHOT",
@@ -38,7 +38,14 @@ resolvers ++= Seq(
   "Readr releases" at "http://releases.mvn-repo.readr.com"
 )
 
-publishMavenStyle := false
+resolvers ++= Seq(
+  "AllenAI Snapshots" at "http://utility.allenai.org:8081/nexus/content/repositories/snapshots",
+  "AllenAI Releases" at "http://utility.allenai.org:8081/nexus/content/repositories/releases",
+  "IESL Releases" at "http://dev-iesl.cs.umass.edu/nexus/content/groups/public",
+  Resolver.sonatypeRepo("snapshots")
+)
+
+publishMavenStyle := true
 
 publishTo := {
   if (isSnapshot.value)
@@ -47,11 +54,3 @@ publishTo := {
     Some("releases" at "s3://releases.mvn-repo.readr.com")
 }
 
-resolvers ++= Seq(
-  "AllenAI Snapshots" at "http://utility.allenai.org:8081/nexus/content/repositories/snapshots",
-  "AllenAI Releases" at "http://utility.allenai.org:8081/nexus/content/repositories/releases",
-  "IESL Releases" at "http://dev-iesl.cs.umass.edu/nexus/content/groups/public",
-  Resolver.sonatypeRepo("snapshots")
-)
-
-//EclipseKeys.withSource := true

@@ -7,6 +7,7 @@ version := "1.1-SNAPSHOT"
 libraryDependencies ++= Seq( 
   "org.apache.spark" %% "spark-core" % "1.0.2" % "provided",
   "com.readr.spark"  %% "base" % "1.1-SNAPSHOT",
+  "com.readr.spark"  %% "index" % "1.1-SNAPSHOT",
   "com.readr" %% "model" % "1.1-SNAPSHOT"
 )
 
@@ -17,7 +18,7 @@ resolvers ++= Seq(
   "Readr releases" at "http://releases.mvn-repo.readr.com"
 )
 
-publishMavenStyle := false
+publishMavenStyle := true
 
 publishTo := {
   if (isSnapshot.value)
@@ -25,5 +26,3 @@ publishTo := {
   else
     Some("releases" at "s3://releases.mvn-repo.readr.com")
 }
-
-//EclipseKeys.withSource := true

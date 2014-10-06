@@ -25,6 +25,28 @@ object Utils {
     sb.toString    
   }
 
+  def unescape(str:String):String = {
+    val sb = new StringBuilder
+
+    var i = 0
+    while (i < str.length) {
+      val c = str.charAt(i)
+      if (c == '\\') {
+        val n = str.charAt(i+1)
+        if (n == 'n')
+          sb.append('\n')
+        else if (n == 't')
+          sb.append('\t')
+        else if (n == '\\')
+          sb.append('\\')
+        i += 1
+      } else
+        sb.append(c)
+      i += 1
+    }
+    sb.toString
+  }
+
   def tsv(pr:Product) = {
     val sb = new StringBuilder
     for (i <- 0 until pr.productArity) {

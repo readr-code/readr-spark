@@ -19,7 +19,9 @@ import java.util.Vector
 
 import com.readr.spark.util.Utils._
 
-object MentionFrameCreator {
+object MentionFrameCreator {}
+
+class MentionFrameCreator extends com.readr.spark.util.Operation {
   
   def run(rddFrame:RDD[(Long,Frame,Seq[FrameMatchFeature])], rddDoc:RDD[(Long,Array[Any])],
      textAnnID:Int, tokenOffsetAnnID:Int, mentionAnnID:Int)(implicit sc:SparkContext):(RDD[(Long,Frame,Seq[FrameMatchFeature])], 
@@ -96,4 +98,45 @@ object MentionFrameCreator {
     run(rddFrame, rddDoc, c0, c1, c2)
   }
 
+
+//  def run(inputPaths:Map[String,String], outputPaths:Map[String,String]):Unit = {
+//    run(inputPaths("text"), inputPaths("tokenInst2basic"), inputPaths("mention"), outputPaths("frame"))
+//  }
+
+  override def requires = Array("text", "documentTokenOffsets", "mention", "outPath")
+
+  override def init:Unit = {}
+
+//  override def run(params:Map[String,String]):Unit =
+//    run(
+//      params("input.text"),
+//      params("input.tokenInst2basic"),
+//      params("input.mention"),
+//      params("input.outPath"))
+
+  override def run(params:String*)(implicit sc:SparkContext):Unit =
+    run(params(0), params(1), params(2), params(3))
+
+  // includes unindex/index
+  def run(//rddFrame:RDD[(Long,Frame,Seq[FrameMatchFeature])],
+          textIndexPaths:String,
+          tokenOffsetIndexPaths:String,
+          mentionIndexPaths:String,
+          outFrameIndexPath:String)(implicit sc:SparkContext):Unit = {
+    // for simplicity, assume no existing frames
+    val frameRDD = sc.emptyRDD[(Long,Frame,Seq[FrameMatchFeature])]
+
+    import com.readr.spark.index._
+    import com.readr.spark.unindex._
+    val textRDD = TextUnindexer.run(textIndexPaths)
+    val tokenRDD = TokenUnindexer.run(tokenOffsetIndexPaths)
+    val mentionRDD = MentionUnindexer.run(mentionIndexPaths)
+
+    // join on documentID
+    val docRDD: RDD[(Long, Array[Any])] = textRDD.join(tokenRDD).join(mentionRDD).map(
+      _ match { case (id,((x,y),z)) => (id,  Array.concat(x, y, z)) })
+    val (newFrameRDD, newDocRDD) = run(frameRDD, docRDD, 0, 1, 2)
+
+    FrameIndexer.run(outFrameIndexPath, newFrameRDD, docRDD)
+  }
 }

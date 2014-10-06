@@ -40,5 +40,3 @@ publishTo := {
   else
     Some("releases" at "s3://releases.mvn-repo.readr.com")
 }
-
-//EclipseKeys.withSource := true

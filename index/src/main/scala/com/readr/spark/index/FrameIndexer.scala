@@ -59,7 +59,7 @@ object FrameIndexer {
         val frameArg = f.args.map(x =>
           Tuple5(frameID, x.argNum, x.name, x.description, if (x.required) 1 else 0)
         )
-        
+
         val frameValence = f.valences.map(x => Tuple3(frameID, x.inheritedFrameID, x.text))
       
         //val (frameMatchFeature:Tuple4[Int,Long,Boolean,Int], dframeMatchFeatureArg:Seq[Tuple4[Int,Int,Int,Int]]) 

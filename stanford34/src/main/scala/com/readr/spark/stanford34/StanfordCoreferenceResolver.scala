@@ -1,7 +1,10 @@
 package com.readr.spark.stanford34
 
+import java.util
 import java.util.Properties
 import java.util.Set
+
+import edu.stanford.nlp.ling.CoreAnnotations.{TokenBeginAnnotation, SentencesAnnotation}
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.collectionAsScalaIterable
@@ -26,8 +29,7 @@ import edu.stanford.nlp.dcoref.CorefCoreAnnotations.CorefChainAnnotation
 import edu.stanford.nlp.dcoref.Dictionaries
 import edu.stanford.nlp.pipeline.{Annotation => StAnnotation}
 import edu.stanford.nlp.pipeline.StanfordHelper;
-import edu.stanford.nlp.util.IntPair
-import edu.stanford.nlp.util.IntTuple
+import edu.stanford.nlp.util.{CoreMap, IntPair, IntTuple}
 
 import com.readr.model.Offsets
 import com.readr.model.annotation.TokensAnn
@@ -58,14 +60,15 @@ object StanfordCoreferenceResolver {
 	        sentNum += 1
 	    }
 	    val mentionSpan = fromT.text.substring(fromO.tokens(m.tokenOffsets.f).f, fromO.tokens(m.tokenOffsets.t - 1).t)
+      sentNum += 1
 	    
 		val com = new StCorefMention(
 		  Dictionaries.MentionType.valueOf(Mention.typeFromByte(m.mentionTyp)),
 		  Dictionaries.Number.valueOf(Mention.numberFromByte(m.number)),
 		  Dictionaries.Gender.valueOf(Mention.genderFromByte(m.gender)),
 		  Dictionaries.Animacy.valueOf(Mention.animacyFromByte(m.animacy)),
-		  m.tokenOffsets.f - fromS.sents(sentNum).f,
-		  m.tokenOffsets.t - fromS.sents(sentNum).f, // -1??
+		  m.tokenOffsets.f - fromS.sents(sentNum).f +1,
+		  m.tokenOffsets.t - fromS.sents(sentNum).f +1, // -1??
 		  sentHead,
 		  c.chainNum,
 		  mentionNum,
@@ -95,6 +98,9 @@ object StanfordCoreferenceResolver {
     val cl = new ArrayBuffer[CoreferenceChain]()
     try {
     val cca:java.util.Map[Integer,StCorefChain] = from.get(classOf[CorefChainAnnotation])
+
+    val sents: util.List[CoreMap] = from.get(classOf[SentencesAnnotation])
+
     var chainNum = 0
     var mentionNum = 0
     for (cc <- cca.values) {
@@ -121,11 +127,11 @@ object StanfordCoreferenceResolver {
 //		  m.mentionSpan)
 //
 //		lp += cpm
-		
-		
+        val sentTokenBegin: Integer = sents(m.sentNum-1).get(classOf[TokenBeginAnnotation])
+
 		ms += Mention(mentionNum,
-		  m.headIndex,  
-		  Offsets(m.startIndex, m.endIndex),
+		  sentTokenBegin + m.headIndex-1,
+		  Offsets(sentTokenBegin + m.startIndex-1, sentTokenBegin + m.endIndex-1),
 		  Mention.typeToByte(m.mentionType.name),
 		  Mention.numberToByte(m.number.name),
 		  Mention.genderToByte(m.gender.name),
@@ -148,7 +154,9 @@ object StanfordCoreferenceResolver {
 //      cl += cpc 
       }
     } catch {
-	  case e:Exception => println("error in fromStanf")
+	  case e:Exception =>
+      e.printStackTrace()
+      println("error in fromStanf")
 	}
     (MentionAnn(ms.toArray), CoreferenceAnn(cl.toArray))
   }
@@ -167,7 +175,7 @@ class StanfordCoreferenceResolver extends Annotator(
   @transient lazy val stanfordAnnotator = StanfordHelper.getAnnotator(properties, "dcoref")
   
   override def annotate(ins:Any*):Array[Any] = {
-    Array(run(
+    val t = run(
       ins(0).asInstanceOf[TextAnn],
       ins(1).asInstanceOf[TokenOffsetAnn],
       ins(2).asInstanceOf[TokensAnn],
@@ -176,7 +184,8 @@ class StanfordCoreferenceResolver extends Annotator(
       ins(5).asInstanceOf[POSAnn],
       ins(6).asInstanceOf[NERTagAnn],
       ins(7).asInstanceOf[ParseAnn],
-      ins(8).asInstanceOf[SentenceDependencyAnn]))
+      ins(8).asInstanceOf[SentenceDependencyAnn])
+    Array(t._1, t._2)
   }
   
   def run(t:TextAnn, toa:TokenOffsetAnn, to:TokensAnn, soa:SentenceOffsetAnn, stoa:SentenceTokenOffsetAnn, posa:POSAnn, nerta:NERTagAnn, 
