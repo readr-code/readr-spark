@@ -106,7 +106,13 @@ val n = g
 n.persist
 
 write(n, outDir, se)
+```
 
+You can also view annotations; for example, `f.first._1` contains the document id for the first document and `f.first._2` an array of all annotations up to the PolyParser annotations. `f.first._2(7)` returns the sentence dependency annotations. 
+
+For more information on how to connect with Readr cloud, see these [examples](http://github.com/readr-code/readr-connect). You can build the indexes for Readr cloud as follows
+
+```scala
 DocumentIndexer.run(outDir, n)
 SourceIndexer.run(outDir, n)
 TextIndexer.run(outDir, n)
@@ -115,8 +121,4 @@ DependencyIndexer.run(outDir, n)
 POSIndexer.run(outDir, n)
 LemmaIndexer.run(outDir, n)
 ```
-
-You can also view annotations; for example, `f.first._1` contains the document id for the first document and `f.first._2` an array of all annotations up to the PolyParser annotations. `f.first._2(7)` returns the sentence dependency annotations. 
-
-For more information on how to connect with Readr cloud, see these [examples](http://github.com/readr-code/readr-connect).
 
