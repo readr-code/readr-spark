@@ -55,16 +55,18 @@ import com.readr.model.annotation._
 import com.readr.client.util.AnnotationSequenceFileWriter
 
 object WriteInput {
-  val inDir = System.getenv("HOME") + "/readr/in"
-  val conf = new Configuration()
+  def main(args:Array[String]) {
+    val inDir = System.getenv("HOME") + "/readr/in"
+    val conf = new Configuration()
 
-  val w = new AnnotationSequenceFileWriter(conf, outDir + "/data.col0.TextAnn")
-  for (clazz <- Annotations.annWithDependentClazzes) sfText.register(clazz)
+    val w = new AnnotationSequenceFileWriter(conf, outDir + "/data.col0.TextAnn")
+    for (clazz <- Annotations.annWithDependentClazzes) sfText.register(clazz)
 
-  w.write(0, TextAnn("This is the first document."))
-  w.write(1, TextAnn("This is the second document."))
+    w.write(0, TextAnn("This is the first document."))
+    w.write(1, TextAnn("This is the second document."))
 
-  w.close
+    w.close
+  }
 }
 ```
 
@@ -115,12 +117,11 @@ After the files have been written, you can read them in code as follows:
 ```scala
 import org.apache.hadoop.conf.Configuration
 import com.readr.model.annotation._
-import com.readr.client.util.AnnotationSequenceFileWriter
+import com.readr.client.util.AnnotationSequenceFileReader
 
 object ReadOutput {
-  val outDir = "/Users/raphael/xuchen/out"
-
   def main(args:scala.Array[String]):Unit = {
+    val outDir = System.getenv("HOME") + "/readr/out"
     val conf = new Configuration()
     val r = new AnnotationSequenceFileReader(conf,
       Array(classOf[TextAnn], classOf[SentenceDependencyAnn]),
