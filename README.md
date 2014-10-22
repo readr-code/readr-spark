@@ -108,7 +108,39 @@ n.persist
 write(n, outDir, se)
 ```
 
-You can also view annotations; for example, `f.first._1` contains the document id for the first document and `f.first._2` an array of all annotations up to the PolyParser annotations. `f.first._2(7)` returns the sentence dependency annotations. 
+You can also view annotations in the spark-shell; for example, `f.first._1` contains the document id for the first document and `f.first._2` an array of all annotations up to the PolyParser annotations. `f.first._2(7)` returns the sentence dependency annotations. 
+
+After the files have been written, you can read them in code as follows:
+
+```scala
+import org.apache.hadoop.conf.Configuration
+import com.readr.model.annotation._
+import com.readr.client.util.AnnotationSequenceFileWriter
+
+object ReadOutput {
+  val outDir = "/Users/raphael/xuchen/out"
+
+  def main(args:scala.Array[String]):Unit = {
+    val conf = new Configuration()
+    val r = new AnnotationSequenceFileReader(conf,
+      Array(classOf[TextAnn], classOf[SentenceDependencyAnn]),
+      outDir + "/data.col0.TextAnn",
+      outDir + "/data.col7.SentenceDependencyAnn")
+    for (clazz <- Annotations.annWithDependentClazzes) r.register(clazz)
+
+    var t:scala.Tuple2[Long,scala.Array[Any]] = null
+
+    while ({ t = r.read; t != null} ) {
+      val id = t._1
+      val ta = t._2(0).asInstanceOf[TextAnn]
+      val sda = t._2(1).asInstanceOf[SentenceDependencyAnn]
+      println(ta)
+      println(sda)
+    }
+    r.close
+  }
+}
+```
 
 For more information on how to connect with Readr cloud, see these [examples](http://github.com/readr-code/readr-connect). You can build the indexes for Readr cloud as follows
 
