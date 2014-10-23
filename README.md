@@ -59,8 +59,8 @@ object WriteInput {
     val inDir = System.getenv("HOME") + "/readr/in"
     val conf = new Configuration()
 
-    val w = new AnnotationSequenceFileWriter(conf, outDir + "/data.col0.TextAnn")
-    for (clazz <- Annotations.annWithDependentClazzes) sfText.register(clazz)
+    val w = new AnnotationSequenceFileWriter(conf, inDir + "/data.col0.TextAnn")
+    for (clazz <- Annotations.annWithDependentClazzes) w.register(clazz)
 
     w.write(0, TextAnn("This is the first document."))
     w.write(1, TextAnn("This is the second document."))
@@ -76,7 +76,7 @@ Make sure you have [Spark](http://spark.apache.org) installed. From the Spark di
 SPARK_MEM=4G bin/spark-shell --master local[2] --jars "$HOME/readr/readr-spark/main/target/scala-2.10/main-assembly-1.1-SNAPSHOT.jar" --driver-java-options "-Dspark.serializer=org.apache.spark.serializer.KryoSerializer -Dspark.kryo.registrator=com.readr.spark.MyRegistrator -Dspark.kryoserializer.buffer.mb=16"
 ```
 
-Copy and past the following commands:
+Copy and paste the following commands into spark shell:
 
 ```scala
 val inDir = System.getenv("HOME") + "/readr/in"
