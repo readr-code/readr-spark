@@ -86,24 +86,28 @@ implicit val isc = sc
 
 import com.readr.spark._
 import com.readr.spark.rr._
-import com.readr.spark.index._
-import com.readr.spark.allenai._
 import com.readr.spark.stanford34._
 import com.readr.spark.other._
-import com.readr.spark.cj._
 import com.readr.spark.frame._
 
 implicit val se = new Schema
 
 val a = read(inDir, se).repartition(2)
 
-val b = annotate(a, new FactorieSegmenter, se)
-val c = annotate(b, new FactorieTokenizer, se)
-val d = annotate(c, new FactoriePOSTagger, se)
-val e = annotate(d, new MorphaStemmer, se)
-val f = annotate(e, new PolyParser, se)
-val g = annotate(f, new com.readr.spark.allenai.SimpleMentionExtractor, se)
-val n = g
+val b = annotate(a, new StanfordTokenizer, se)
+val c = annotate(b, new StanfordSentenceSplitter, se)
+val d = annotate(c, new StanfordSRParser, se)
+val e = annotate(d, new StanfordDependencyExtractor, se)
+val f = annotate(e, new StanfordPOSTagger, se)
+val g = annotate(f, new StanfordLemmatizer, se)
+val h = annotate(g, new StanfordNERTagger, se)
+val i = annotate(h, new SimpleConstituentExtractor, se)
+//val j = annotate(i, new SimpleNERSegmenter, se)
+//val k = annotate(j, new StanfordCorefResolver, se)
+//val l = annotate(k, new SimpleMentionExtractor, se)
+//val m = annotate(l, new MintzLikeFeatureExtractor, se)
+
+val n = i
 
 n.persist
 
@@ -143,9 +147,13 @@ object ReadOutput {
 }
 ```
 
+### Appendix
+
 For more information on how to connect with Readr cloud, see these [examples](http://github.com/readr-code/readr-connect). You can build the indexes for Readr cloud as follows
 
 ```scala
+import com.readr.spark.index._
+
 DocumentIndexer.run(outDir, n)
 SourceIndexer.run(outDir, n)
 TextIndexer.run(outDir, n)
@@ -155,3 +163,16 @@ POSIndexer.run(outDir, n)
 LemmaIndexer.run(outDir, n)
 ```
 
+For an alternative pipeline using the Allenai Tools, you can use
+```scala
+import com.readr.spark.allenai._
+
+val b = annotate(a, new FactorieSegmenter, se)
+val c = annotate(b, new FactorieTokenizer, se)
+val d = annotate(c, new FactoriePOSTagger, se)
+val e = annotate(d, new MorphaStemmer, se)
+val f = annotate(e, new PolyParser, se)
+val g = annotate(f, new com.readr.spark.allenai.SimpleMentionExtractor, se)
+```
+
+Note that you will need to build the readr-spark assembly with allenai enabled in this case. See`project/Build.scala`.
