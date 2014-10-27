@@ -9,11 +9,7 @@ import scala.util.control.Breaks.break
 import scala.util.control.Breaks.breakable
 
 import com.readr.model.Offsets
-import com.readr.model.annotation.SentenceOffsetAnn
-import com.readr.model.annotation.SentenceTokenOffsetAnn
-import com.readr.model.annotation.TextAnn
-import com.readr.model.annotation.TextFragmentAnn
-import com.readr.model.annotation.TokenOffsetAnn
+import com.readr.model.annotation._
 import com.readr.spark.util.Annotator
 
 import edu.stanford.nlp.ling.CoreAnnotations.CharacterOffsetBeginAnnotation
@@ -28,8 +24,6 @@ import edu.stanford.nlp.ling.CoreLabel
 import edu.stanford.nlp.pipeline.{Annotation => StAnnotation}
 import edu.stanford.nlp.pipeline.StanfordHelper;
 import edu.stanford.nlp.util.CoreMap
-
-import com.readr.model.annotation.TokensAnn
 
 object StanfordSentenceSplitter {
   
@@ -90,22 +84,38 @@ object StanfordSentenceSplitter {
   }
 }
 
-class StanfordSentenceSplitter extends Annotator(
+class StanfordSentenceSplitter(useFrags:Boolean = false) extends Annotator(
       generates = Array(classOf[SentenceOffsetAnn], classOf[SentenceTokenOffsetAnn]),
-      requires = Array(classOf[TextAnn], classOf[TextFragmentAnn], classOf[TokenOffsetAnn], classOf[TokensAnn])) {
-  
+      requires = {
+        if (useFrags)
+          Array(classOf[TextAnn], classOf[TextFragmentAnn], classOf[TokenOffsetAnn], classOf[TokensAnn])
+        else
+          Array(classOf[TextAnn], classOf[TokenOffsetAnn], classOf[TokensAnn])
+      }) {
+
   val properties = new Properties()
   @transient lazy val stanfordAnnotator = StanfordHelper.getAnnotator(properties, "ssplit") 
   //@transient lazy val tokenAnnotator = StanfordHelper.getAnnotator(properties, "tokenize")  //???
   
   override def annotate(ins:Any*):Array[Any] = {
-    val t = run(ins(0).asInstanceOf[TextAnn], 
+    val t = if (useFrags) {
+      run(ins(0).asInstanceOf[TextAnn],
         ins(1).asInstanceOf[TextFragmentAnn],
         ins(2).asInstanceOf[TokenOffsetAnn],
         ins(3).asInstanceOf[TokensAnn])
+    } else {
+      run(ins(0).asInstanceOf[TextAnn],
+        ins(1).asInstanceOf[TokenOffsetAnn],
+        ins(2).asInstanceOf[TokensAnn])
+    }
     Array(t._1, t._2)
   }
-  
+
+  def run(t:TextAnn, td:TokenOffsetAnn, to:TokensAnn):(SentenceOffsetAnn, SentenceTokenOffsetAnn) = {
+    val fa = TextFragmentAnn(Array(TextFragment("extract", Offsets(0, t.text.size), true)))
+    run(t, fa, td, to)
+  }
+
   def run(t:TextAnn, fa:TextFragmentAnn, td:TokenOffsetAnn, to:TokensAnn):(SentenceOffsetAnn, SentenceTokenOffsetAnn) = {
 	// create Stanford annotation with relevant contents
 	val stanAnn = new StAnnotation(t.text)

@@ -179,10 +179,17 @@ object rr {
   }  
 
   /** Run annotator, append results to annotations array */
+  // Note: We do not recommend using this method, but the following one
+  // that also takes a schema: This method tries to automatically infer
+  // the schema by processing the first row, but that can be slow for
+  // annotators that need to load a lot into memory.
   def annotate(rdd:RDD[(Long,Array[Any])], annotator:Annotator)(implicit sc:SparkContext):RDD[(Long,Array[Any])] = {
     val arr = ArrayBuffer[Int]()
-    for (i <- 0 until annotator.requires.length)
-      arr += firstColumnOfType(rdd, annotator.requires(i))
+    for (i <- 0 until annotator.requires.length) {
+      val cot = firstColumnOfType(rdd, annotator.requires(i))
+      if (cot < 0) throw new Exception("No column of type " + annotator.requires(i).getName)
+      arr += cot
+    }
     val args = arr.toArray
     rdd.map(x => {
       val anns = x._2

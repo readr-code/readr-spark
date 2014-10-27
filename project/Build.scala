@@ -28,7 +28,7 @@ object ReadrSparkBuild extends Build {
     subCj,
     subMalt,
     subStanford34,
-//    subAllenai,
+    subAllenai,
     subFrame,
     subOther)
 
@@ -39,9 +39,9 @@ object ReadrSparkBuild extends Build {
   lazy val subCj = subproject("cj") dependsOn(subBase)
   lazy val subMalt = subproject("malt") dependsOn(subBase)
   lazy val subStanford34 = subproject("stanford34") dependsOn(subBase)
-//  lazy val subAllenai = subproject("allenai") dependsOn(subBase)
+  lazy val subAllenai = subproject("allenai") dependsOn(subBase)
   lazy val subFrame = subproject("frame") dependsOn(subBase,subIndex)
   lazy val subOther = subproject("other") dependsOn(subBase)
-  lazy val subMain = Project(id = "main", base = file("main"), settings = buildSettings ++ assemblySettings) dependsOn(subBase,subIndex,subCj,subMalt,subStanford34,subFrame,subOther)
-//  lazy val subMain = Project(id = "main", base = file("main"), settings = buildSettings ++ assemblySettings) dependsOn(subBase,subIndex,subCj,subMalt,subStanford34,subAllenai,subFrame,subOther)
+//  lazy val subMain = Project(id = "main", base = file("main"), settings = buildSettings ++ assemblySettings) dependsOn(subBase,subIndex,subCj,subMalt,subStanford34,subFrame,subOther)
+  lazy val subMain = Project(id = "main", base = file("main"), settings = buildSettings ++ assemblySettings) dependsOn(subBase,subIndex,subCj,subMalt,subStanford34,subAllenai,subFrame,subOther)
 }

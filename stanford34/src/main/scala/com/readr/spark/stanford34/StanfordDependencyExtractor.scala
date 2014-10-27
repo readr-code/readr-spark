@@ -136,7 +136,7 @@ object StanfordDependencyExtractor {
 	  }
 			
 	  // convert semantic graph
-	  val edgeSet = deps.getEdgeSet
+	  val edgeSet = deps.edgeListSorted()//.getAllEdges//() //.getEdgeSet
 	  val pl = new ArrayBuffer[Dependency](edgeSet.size)
 	  for (e <- edgeSet) {
 	    val dep = Dependency(e.getRelation.toString, e.getGovernor.index-1, e.getDependent.index-1)
