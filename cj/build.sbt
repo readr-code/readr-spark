@@ -2,12 +2,14 @@ organization := "com.readr.spark"
 
 name := "cj"
 
-version := "1.1-SNAPSHOT"
+version := "1.2-SNAPSHOT"
+
+scalaVersion := "2.11.4"
 
 libraryDependencies ++= Seq( 
-  "org.apache.spark" %% "spark-core" % "1.0.2" % "provided",
-  "com.readr.spark"  %% "base" % "1.1-SNAPSHOT",
-  "com.readr" %% "model" % "1.1-SNAPSHOT"
+  "org.apache.spark" % "spark-core_2.10" % "1.1.1" % "provided",
+  "com.readr.spark"  %% "base" % "1.2-SNAPSHOT",
+  "com.readr" %% "model" % "1.2-SNAPSHOT"
 )
 
 resolvers += "Akka Repository" at "http://repo.akka.io/releases/"

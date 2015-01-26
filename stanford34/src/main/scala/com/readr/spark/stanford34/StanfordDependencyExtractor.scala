@@ -136,13 +136,15 @@ object StanfordDependencyExtractor {
 	  }
 			
 	  // convert semantic graph
-	  val edgeSet = deps.edgeListSorted()//.getAllEdges//() //.getEdgeSet
-	  val pl = new ArrayBuffer[Dependency](edgeSet.size)
-	  for (e <- edgeSet) {
-	    val dep = Dependency(e.getRelation.toString, e.getGovernor.index-1, e.getDependent.index-1)
-	    pl += dep
-	  }
-	  psl += pl.toArray
+    if (deps != null) {
+      val edgeSet = deps.edgeListSorted() //.getAllEdges//() //.getEdgeSet
+      val pl = new ArrayBuffer[Dependency](edgeSet.size)
+      for (e <- edgeSet) {
+        val dep = Dependency(e.getRelation.toString, e.getGovernor.index - 1, e.getDependent.index - 1)
+        pl += dep
+      }
+      psl += pl.toArray
+    }
 	}
 	SentenceDependencyAnn(psl.toArray)
   }
@@ -183,20 +185,25 @@ class StanfordDependencyExtractor
 	for (sentence <- stanAnn.get(classOf[SentencesAnnotation])) {
 	  val tree = sentence.get(classOf[TreeAnnotation])
 
-	  depTyp match {
-		case "DepCollapsed" => {
-		  val deps = SemanticGraphFactory.generateCollapsedDependencies(tree)
-		  sentence.set(classOf[CollapsedDependenciesAnnotation], deps)
-		}
-		case "DepUncollapsed" => {
-		  val deps = SemanticGraphFactory.generateUncollapsedDependencies(tree)
-		  sentence.set(classOf[BasicDependenciesAnnotation], deps)
-		}
-		case "DepCCProcessed" => {
-		  val deps = SemanticGraphFactory.generateCCProcessedDependencies(tree)
-		  sentence.set(classOf[CollapsedCCProcessedDependenciesAnnotation], deps)
-		}
-	  }
+    try {
+      depTyp match {
+        case "DepCollapsed" => {
+          val deps = SemanticGraphFactory.generateCollapsedDependencies(tree)
+          sentence.set(classOf[CollapsedDependenciesAnnotation], deps)
+        }
+        case "DepUncollapsed" => {
+          val deps = SemanticGraphFactory.generateUncollapsedDependencies(tree)
+          sentence.set(classOf[BasicDependenciesAnnotation], deps)
+        }
+        case "DepCCProcessed" => {
+          val deps = SemanticGraphFactory.generateCCProcessedDependencies(tree)
+          sentence.set(classOf[CollapsedCCProcessedDependenciesAnnotation], deps)
+        }
+      }
+    } catch {
+      case e:Exception =>
+        e.printStackTrace
+    }
 	}
 	
 	StanfordDependencyExtractor.fromStanford(stanAnn, depTyp)

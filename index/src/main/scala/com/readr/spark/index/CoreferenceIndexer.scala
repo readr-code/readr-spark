@@ -26,6 +26,14 @@ object CoreferenceIndexer {
   // mention2coref: documentID, mentionNum, chainNum    ///////, distantClusterID (=frameID?)
   // corefCluster: documentID, chainNum, mentionSpan       ==> distant
 
+
+  /*
+  (documentID INTEGER NOT NULL,
+    mentionNum INTEGER NOT NULL,
+    chainNum INTEGER NOT NULL,
+    representativeMentionNum INTEGER NOT NULL,
+  */
+
   
   // distantCluster: distantClusterID, name, count
   /////// distantCluster: distant
@@ -38,7 +46,7 @@ object CoreferenceIndexer {
     
     // documentID, head, start, end, span, corefClusterID, isProper, isRepresentative 
     val mention2cluster = rdd.flatMap(x => {
-        val l = new ArrayBuffer[(Long,Int,Int)]()
+        val l = new ArrayBuffer[(Long,Int,Int,Int)]()
         val id = x._1
         //val textAnn = x._2(textAnnID).asInstanceOf[TextAnn]
         //val tokenOffsetAnn = x._2(tokenOffsetAnnID).asInstanceOf[TokenOffsetAnn]
@@ -46,7 +54,7 @@ object CoreferenceIndexer {
         val coreferenceAnn = x._2(coreferenceAnnID).asInstanceOf[CoreferenceAnn]
         for (c <- coreferenceAnn.chains)
           for (mentionNum <- c.mentionNums)
-            l += Tuple3(id, mentionNum, c.chainNum)
+            l += Tuple4(id, mentionNum, c.chainNum, c.representativeMentionNum)
         l
     })
     
@@ -141,16 +149,18 @@ object CoreferenceIndexer {
     
     //mention.map(tsv(_)).saveAsTextFile(outDir + "/mention")
     //distantCluster.map(tsv(_)).saveAsTextFile(outDir + "/distantCluster")
-    mention2cluster.map(tsv(_)).saveAsTextFile(outDir + "/mention2cluster")
+    mention2cluster.map(tsv(_)).saveAsTextFile(outDir + "/coreference")
     corefCluster.map(tsv(_)).saveAsTextFile(outDir + "/corefCluster")
     //mention2cluster.map(tsv(_)).saveAsTextFile(outDir + "/mention2cluster")
   }  
   
   // finds Source
-//  def run(outDir:String, rdd:RDD[(Long,Array[Any])])(implicit sc:SparkContext):Unit = {
-//    val c0 = firstColumnOfType(rdd, classOf[MentionAnn])
-//    val c1 = firstColumnOfType(rdd, classOf[CoreferenceAnn])
-//    run(outDir, rdd, c0)
-//  }
+  def run(outDir:String, rdd:RDD[(Long,Array[Any])])(implicit sc:SparkContext):Unit = {
+    val c0 = firstColumnOfType(rdd, classOf[TextAnn])
+    val c1 = firstColumnOfType(rdd, classOf[TokenOffsetAnn])
+    val c2 = firstColumnOfType(rdd, classOf[MentionAnn])
+    val c3 = firstColumnOfType(rdd, classOf[CoreferenceAnn])
+    run(outDir, rdd, c0, c1, c2, c3)
+  }
 
 }

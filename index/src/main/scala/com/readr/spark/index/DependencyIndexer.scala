@@ -13,10 +13,15 @@ import com.readr.spark.util.Utils._
 
 
 object DependencyIndexer {
-  
+
+  def dedup(deps:Array[Dependency]):Array[Dependency] = {
+    deps.distinct
+  }
+
   def run(outDir:String, rdd:RDD[(Long,Array[Any])], sentenceDependencyAnnID:Int, sentenceTokenOffsetAnnID:Int)
   	(implicit sc:SparkContext):Unit = {
-    
+
+
     val flatDeps = rdd.flatMap(x => {
         val l = new ArrayBuffer[(String,(Long,Int,Int,Int,Int))]()
         val id = x._1
@@ -26,7 +31,8 @@ object DependencyIndexer {
         for (sentNum <- 0 until sentenceDependencyAnn.sents.size) {
           val senOff = sentenceTokenOffsetAnn.sents(sentNum)
           val sen = sentenceDependencyAnn.sents(sentNum)
-          for (d <- sen)
+
+          for (d <- dedup(sen))
             l += Tuple2(d.name, Tuple5(id, sentNum, d.from, d.to, senOff.f))
         }
         l

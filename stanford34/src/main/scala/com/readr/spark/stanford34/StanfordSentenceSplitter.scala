@@ -84,36 +84,43 @@ object StanfordSentenceSplitter {
   }
 }
 
-class StanfordSentenceSplitter(useFrags:Boolean = false) extends Annotator(
+class StanfordSentenceSplitter extends Annotator(
+  generates = Array(classOf[SentenceOffsetAnn], classOf[SentenceTokenOffsetAnn]),
+  requires = Array(classOf[TextAnn], classOf[TokenOffsetAnn], classOf[TokensAnn])) {
+
+  val properties = new Properties()
+  @transient lazy val stanfordAnnotator = StanfordHelper.getAnnotator(properties, "ssplit")
+  //@transient lazy val tokenAnnotator = StanfordHelper.getAnnotator(properties, "tokenize")  //???
+
+  override def annotate(ins: Any*): Array[Any] = {
+    val t = run(ins(0).asInstanceOf[TextAnn],
+      ins(1).asInstanceOf[TokenOffsetAnn],
+      ins(2).asInstanceOf[TokensAnn])
+    Array(t._1, t._2)
+  }
+
+  def run(t: TextAnn, td: TokenOffsetAnn, to: TokensAnn): (SentenceOffsetAnn, SentenceTokenOffsetAnn) = {
+    val sssFrags = new StanfordSentenceSplitterWithFrags
+    val fa = TextFragmentAnn(Array(TextFragment("extract", Offsets(0, t.text.size), true)))
+    sssFrags.run(t, fa, td, to)
+  }
+}
+
+
+class StanfordSentenceSplitterWithFrags extends Annotator(
       generates = Array(classOf[SentenceOffsetAnn], classOf[SentenceTokenOffsetAnn]),
-      requires = {
-        if (useFrags)
-          Array(classOf[TextAnn], classOf[TextFragmentAnn], classOf[TokenOffsetAnn], classOf[TokensAnn])
-        else
-          Array(classOf[TextAnn], classOf[TokenOffsetAnn], classOf[TokensAnn])
-      }) {
+      requires = Array(classOf[TextAnn], classOf[TextFragmentAnn], classOf[TokenOffsetAnn], classOf[TokensAnn])) {
 
   val properties = new Properties()
   @transient lazy val stanfordAnnotator = StanfordHelper.getAnnotator(properties, "ssplit") 
   //@transient lazy val tokenAnnotator = StanfordHelper.getAnnotator(properties, "tokenize")  //???
   
   override def annotate(ins:Any*):Array[Any] = {
-    val t = if (useFrags) {
-      run(ins(0).asInstanceOf[TextAnn],
+    val t = run(ins(0).asInstanceOf[TextAnn],
         ins(1).asInstanceOf[TextFragmentAnn],
         ins(2).asInstanceOf[TokenOffsetAnn],
         ins(3).asInstanceOf[TokensAnn])
-    } else {
-      run(ins(0).asInstanceOf[TextAnn],
-        ins(1).asInstanceOf[TokenOffsetAnn],
-        ins(2).asInstanceOf[TokensAnn])
-    }
     Array(t._1, t._2)
-  }
-
-  def run(t:TextAnn, td:TokenOffsetAnn, to:TokensAnn):(SentenceOffsetAnn, SentenceTokenOffsetAnn) = {
-    val fa = TextFragmentAnn(Array(TextFragment("extract", Offsets(0, t.text.size), true)))
-    run(t, fa, td, to)
   }
 
   def run(t:TextAnn, fa:TextFragmentAnn, td:TokenOffsetAnn, to:TokensAnn):(SentenceOffsetAnn, SentenceTokenOffsetAnn) = {

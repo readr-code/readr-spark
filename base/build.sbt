@@ -2,15 +2,19 @@ organization := "com.readr.spark"
 
 name := "base"
 
-version := "1.1-SNAPSHOT"
+version := "1.2-SNAPSHOT"
+
+scalaVersion := "2.11.4"
 
 libraryDependencies ++= Seq(
-  "org.apache.spark" %% "spark-core" % "1.0.2" % "provided",
+  "org.apache.spark" %% "spark-core" % "1.3.0-SNAPSHOT" % "provided",
   "org.apache.hadoop" % "hadoop-client" % "1.0.4",
   "commons-configuration" % "commons-configuration" % "1.9"
  )
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.6" % "test"
+
+resolvers += Resolver.mavenLocal
 
 resolvers ++= Seq(
   "Readr snapshots" at "http://snapshots.mvn-repo.readr.com",

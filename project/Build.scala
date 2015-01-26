@@ -5,8 +5,9 @@ import AssemblyKeys._
 
 object ReadrSparkBuild extends Build {
   lazy val buildSettings = Defaults.defaultSettings ++ Seq(
-    version := "1.1-SNAPSHOT",
-    organization := "com.readr.spark"
+    version := "1.2-SNAPSHOT",
+    organization := "com.readr.spark",
+    scalaVersion := "2.11.4"
   )
 
   lazy val root = Project(id = "readr-spark", base = file("."), settings = buildSettings ++ assemblySettings ++ Seq(
@@ -25,23 +26,25 @@ object ReadrSparkBuild extends Build {
     subBase,
     subIndex,
     subMain,
-    subCj,
-    subMalt,
+//    subCj,
+//    subMalt,
     subStanford34,
-    //subAllenai,
+//    //subAllenai,
     subFrame,
-    subOther)
+    subOther
+  )
 
   def subproject(name: String) = Project(id = name, base = file(name))
 
   lazy val subBase = subproject("base")
   lazy val subIndex = subproject("index") dependsOn(subBase)
-  lazy val subCj = subproject("cj") dependsOn(subBase)
-  lazy val subMalt = subproject("malt") dependsOn(subBase)
+//  lazy val subCj = subproject("cj") dependsOn(subBase)
+//  lazy val subMalt = subproject("malt") dependsOn(subBase)
   lazy val subStanford34 = subproject("stanford34") dependsOn(subBase)
-  //lazy val subAllenai = subproject("allenai") dependsOn(subBase)
+//  //lazy val subAllenai = subproject("allenai") dependsOn(subBase)
   lazy val subFrame = subproject("frame") dependsOn(subBase,subIndex)
   lazy val subOther = subproject("other") dependsOn(subBase)
-  lazy val subMain = Project(id = "main", base = file("main"), settings = buildSettings ++ assemblySettings) dependsOn(subBase,subIndex,subCj,subMalt,subStanford34,subFrame,subOther)
-  //lazy val subMain = Project(id = "main", base = file("main"), settings = buildSettings ++ assemblySettings) dependsOn(subBase,subIndex,subCj,subMalt,subStanford34,subAllenai,subFrame,subOther)
+  lazy val subMain = Project(id = "main", base = file("main"), settings = buildSettings ++ assemblySettings) dependsOn(subBase,subIndex,subStanford34,subFrame,subOther)
+//  lazy val subMain = Project(id = "main", base = file("main"), settings = buildSettings ++ assemblySettings) dependsOn(subBase,subIndex,subCj,subMalt,subStanford34,subFrame,subOther)
+//  //lazy val subMain = Project(id = "main", base = file("main"), settings = buildSettings ++ assemblySettings) dependsOn(subBase,subIndex,subCj,subMalt,subStanford34,subAllenai,subFrame,subOther)
 }

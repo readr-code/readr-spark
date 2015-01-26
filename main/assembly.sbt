@@ -40,7 +40,8 @@ excludedJars in assembly := {
 //    "stanford-corenlp-3.2.0.jar",
     "commons-beanutils-1.7.0.jar",
     "commons-beanutils-core-1.8.0.jar",
-    "hadoop-core-1.0.4.jar"
+    "hadoop-core-1.0.4.jar",
+  "log4j-1.2.17.jar"
 //    "jcl-over-slf4j-1.7.6.jar",
 //    "xml-apis-1.4.01.jar",
 //    "akka-actor_2.10-2.3.3.jar",

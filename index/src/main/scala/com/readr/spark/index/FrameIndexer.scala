@@ -86,13 +86,17 @@ object FrameIndexer {
     val frameCounts = all.map(x => x._4)
     val frameMatchFeature = all.flatMap(x => x._5).map(x => x._1)
     val frameMatchFeatureArg = all.flatMap(x => x._5).flatMap(x => x._2)
-    
+    val frameMatchFeatureArgflat = all.flatMap(x => x._5).map(x => Tuple3(x._1._1, x._2(0)._3, x._2.mkString(" ")))
+
+    //val frameMatchFeatureArgflat = frameMatchFeatureArg.ma
+
     frame.map(tsv(_)).saveAsTextFile(outDir + "/frame")
     frameArg.map(tsv(_)).saveAsTextFile(outDir + "/frameArg")
     frameValence.map(tsv(_)).saveAsTextFile(outDir + "/frameValence")
     frameCounts.map(tsv(_)).saveAsTextFile(outDir + "/frameCounts")
     frameMatchFeature.map(tsv(_)).saveAsTextFile(outDir + "/frameMatchFeature")
     frameMatchFeatureArg.map(tsv(_)).saveAsTextFile(outDir + "/frameMatchFeatureArg")
-  }  
+    frameMatchFeatureArgflat.map(tsv(_)).saveAsTextFile(outDir + "/frameMatchFeatureArgflat")
+  }
 
 }

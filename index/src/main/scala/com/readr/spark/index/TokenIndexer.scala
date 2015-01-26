@@ -18,7 +18,7 @@ object TokenIndexer {
     TokensAnn(toTokens(t.text, toa.tokens))
   
   def toTokens(text:String, tos:Array[Offsets]):Array[String] =
-    tos.map(x => text.substring(x.f, x.t))
+    tos.map(x => text.substring(x.f, x.t).replaceAll("\n", " "))
   
   def offsets2text(off:Array[Offsets]):String =
     off.map(x => x.f.toString + ":" + x.t.toString).mkString(" ")
@@ -29,7 +29,7 @@ object TokenIndexer {
   def run(outDir:String, rdd:RDD[(Long,Array[Any])], textAnnID:Int, tokenOffsetAnnID:Int, 
       tokensAnnID:Int, sentenceOffsetAnnID:Int, sentenceTokenOffsetAnnID:Int)
   	(implicit sc:SparkContext):Unit = {
-    
+
     val sentenceTokenized = rdd.flatMap(x => {
         val l = new ArrayBuffer[(Long,Int,String)]()
         val id = x._1

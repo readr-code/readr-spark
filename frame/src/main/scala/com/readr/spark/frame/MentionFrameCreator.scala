@@ -22,7 +22,15 @@ import com.readr.spark.util.Utils._
 object MentionFrameCreator {}
 
 class MentionFrameCreator extends com.readr.spark.util.Operation {
-  
+
+  // docs -> frames
+  def run(rddDoc:RDD[(Long,Array[Any])],textAnnID:Int, tokenOffsetAnnID:Int, mentionAnnID:Int)
+         (implicit sc:SparkContext):RDD[(Long,Frame,Seq[FrameMatchFeature])] = {
+    // for simplicity, assume no existing frames
+    val frameRDD = sc.emptyRDD[(Long,Frame,Seq[FrameMatchFeature])]
+    run(frameRDD, rddDoc, textAnnID, tokenOffsetAnnID, mentionAnnID)._1
+  }
+
   def run(rddFrame:RDD[(Long,Frame,Seq[FrameMatchFeature])], rddDoc:RDD[(Long,Array[Any])],
      textAnnID:Int, tokenOffsetAnnID:Int, mentionAnnID:Int)(implicit sc:SparkContext):(RDD[(Long,Frame,Seq[FrameMatchFeature])], 
           RDD[(Long,Array[Any])]) = {
@@ -89,7 +97,7 @@ class MentionFrameCreator extends com.readr.spark.util.Operation {
     (newRddFrame, rddDoc)
   }
   
-    // finds Source
+  // finds Source
   def run(rddFrame:RDD[(Long,Frame,Seq[FrameMatchFeature])], rddDoc:RDD[(Long,Array[Any])])(implicit sc:SparkContext):(RDD[(Long,Frame,Seq[FrameMatchFeature])], 
           RDD[(Long,Array[Any])]) = {
     val c0 = firstColumnOfType(rddDoc, classOf[TextAnn])
@@ -98,8 +106,15 @@ class MentionFrameCreator extends com.readr.spark.util.Operation {
     run(rddFrame, rddDoc, c0, c1, c2)
   }
 
+  // finds Source
+  def run(rddDoc:RDD[(Long,Array[Any])])(implicit sc:SparkContext):RDD[(Long,Frame,Seq[FrameMatchFeature])] = {
+    val c0 = firstColumnOfType(rddDoc, classOf[TextAnn])
+    val c1 = firstColumnOfType(rddDoc, classOf[TokenOffsetAnn])
+    val c2 = firstColumnOfType(rddDoc, classOf[MentionAnn])
+    run(rddDoc, c0, c1, c2)
+  }
 
-//  def run(inputPaths:Map[String,String], outputPaths:Map[String,String]):Unit = {
+    //  def run(inputPaths:Map[String,String], outputPaths:Map[String,String]):Unit = {
 //    run(inputPaths("text"), inputPaths("tokenInst2basic"), inputPaths("mention"), outputPaths("frame"))
 //  }
 
